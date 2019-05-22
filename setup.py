@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(
-    name = "vds-vault-oauth",
+    name = "vds-vault-oauth-tool",
     version = "0.1",
     author = "Vault Developer Support",
     author_email = "kevin.nee@veeva.com",
