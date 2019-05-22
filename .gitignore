@@ -1,0 +1,15 @@
+.settings/
+.classpath
+.gitattributes
+.project
+/target/
+.idea
+*.iml
+/bin/
+.env*
+deployment/
+.vscode
+/*/__pycache__/
+/*/*/__pycache__/
+/*/*/*/__pycache__/
+/vds_vault_oauth/logs/oauth-output*

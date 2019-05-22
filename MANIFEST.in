@@ -1,0 +1,4 @@
+include vds_vault_oauth/config.ini
+include vds_vault_oauth/logs/PLACEHOLDER.log
+include vds_vault_oauth/libraries/Microsoft.IdentityModel.Clients.ActiveDirectory.dll
+include vds_vault_oauth/libraries/Microsoft.IdentityModel.Clients.ActiveDirectory.xml
