@@ -6,7 +6,7 @@ setup(
     author = "Vault Developer Support",
     author_email = "kevin.nee@veeva.com",
     description = "A tool to check OAuth2 configurations.",
-    install_requires = ["python-jose", "requests", "dotnet"],
+    install_requires = ["python-jose", "requests", "dotnet;platform_system=='Windows'"],
     include_package_data=True,
     license = "MIT",
     packages = find_packages(),
