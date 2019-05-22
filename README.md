@@ -31,7 +31,7 @@ The Python script can be installed and run directly via the command line.
    1. Python 3.6 is required.
    2. Install pip (it should be included with Python 3.6.8)
 3. Install the vds-vault-oauth project using **one** of the following options.
-   1. **RECOMMENDED**: `pip3.6 install -e git+https://github.com/veeva/vds-vault-oauth.git@master#egg=vds_vault_oauth`
+   1. **RECOMMENDED**: `pip3.6 install -e git+https://github.com/veeva/vds-vault-oauth-tool.git@release#egg=vds_vault_oauth`
       * Installation directory will be displayed in pip.
          * Windows: `c:\users\{username}\src\vds-vault-oauth`
    2. Download the project for the repository.
