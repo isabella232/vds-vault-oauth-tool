@@ -33,7 +33,9 @@ The Python script can be installed and run directly via the command line.
 3. Install the vds-vault-oauth project using **one** of the following options.
    1. **RECOMMENDED**: `pip3.6 install -e git+https://github.com/veeva/vds-vault-oauth-tool.git@release#egg=vds_vault_oauth`
       * Installation directory will be displayed in pip.
-         * Windows: `c:\users\{username}\src\vds-vault-oauth`
+         * Windows: `c:\users\{username}\src\vds-vault-oauth-tool`
+         * Mac OS : `/Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/site-packages/vds-vault-oauth-tool`
+                    `/Home/src/vds-vault-oauth-tool`
    2. Download the project for the repository.
         1. Unzip the project and navigate to the vds-vault-vault base directory in a command line prompt:
          
@@ -64,7 +66,10 @@ The default config.ini file is located in:
   
     Python installation directory
     Windows: `C:\users\<YOUR_USER>\AppData\local\Programs\Python\Python36\Lib\site-packages\vds_vault_oauth`
-    Windows: `c:\users\{username}\src\vds-vault-oauth\vds_vault_oauth`
+             `C:\users\{username}\src\vds-vault-oauth-tool\vds_vault_oauth`
+
+    Mac OS : `/Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/site-packages/vds_vault_oauth`
+             `/src/vds-vault-oauth-tool`
 
 * If you downloaded the script and are running the code directly:
     
@@ -123,15 +128,15 @@ A log of the tool execution will then be output to the python console, the local
 
 * Run the tool against the config.ini
 
-    > vds_vault_oauth
+    > vds_vault_oauth_tool
 
 * Run the tool against ADFS with the specified client ID and AS Metadata URL
 
-    > vds_vault_oauth --is_adfs -client_id=VaultCheckOut -as_metadata_url=https://test.testvault.com/adfs/.well-known/openid-configuration
+    > vds_vault_oauth_tool --is_adfs -client_id=VaultCheckOut -as_metadata_url=https://test.testvault.com/adfs/.well-known/openid-configuration
 
 * Run the tool against the specified Vault user and client ID
 
-    > vds_vault_oauth -client_id=VaultCheckOut -username=test.user@testveeva.com
+    > vds_vault_oauth_tool -client_id=VaultCheckOut -username=test.user@testveeva.com
 
 
 ### Run from code:

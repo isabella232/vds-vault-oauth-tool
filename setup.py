@@ -10,7 +10,7 @@ setup(
     include_package_data=True,
     license = "MIT",
     packages = find_packages(),
-    entry_points = {"console_scripts": ["vds_vault_oauth=vds_vault_oauth.main:main"]},
+    entry_points = {"console_scripts": ["vds_vault_oauth_tool=vds_vault_oauth.main:main"]},
     classifiers=[
         "Topic :: Utilities",
         "License :: Apache License, Version 2.0",

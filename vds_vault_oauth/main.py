@@ -124,9 +124,9 @@ def main():
 
         # Parse in the default config.ini if it doesn't exist as a parameter
         if (args.config == None):
-                config.read(projectPath  + "\config.ini")
+                config.read(path_converter(projectPath  + "\config.ini"))
         else:
-                config.read(args.config.strip())
+                config.read(path_converter(args.config.strip()))
 
         # Check for parameter values from the config.ini file
         if ('oauth_connection' in config):
