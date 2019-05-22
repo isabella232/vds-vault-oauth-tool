@@ -2,12 +2,12 @@ import requests, platform, webbrowser
 from vds_vault_oauth.utilities.Token import Token
 from vds_vault_oauth.utilities.OAuthContainer import OAuthContainer
 from vds_vault_oauth import main
-import dotnet, os
 
 # Only loads if the system is on Windows
 # Loads the Microsoft.IdentityModel.Clients.ActiveDirectory.dll file that is necessary for C# ADAL.
 # Uses the pydotnet library (https://bitbucket.org/pydotnet/pydotnet/wiki/Home)
 if platform.system() == 'Windows':
+    import dotnet, os
     print(main.projectPath)
     dotnet.add_assemblies(main.projectPath + "\libraries")
     dotnet.load_assembly('Microsoft.IdentityModel.Clients.ActiveDirectory')
@@ -24,7 +24,8 @@ class ADALService():
             print("The OAuth information provided is for ADFS 4.0 (ADAL). The tool can only test against ADAL on a Windows-based machine. Please try again on a Windows machine.\n\n")
             return False
 
-
+# Class that defines how to retrieve tokens for ADFS (ADAL)
+# This uses a Python library that allows for the use of the C# ADAL Microsoft library.
 class OAuthADALContainer(OAuthContainer):
     def __init__(self, as_metadata_url=None, as_metadata=None, client_id=None, port=None, logger=None):
         super().__init__(as_metadata_url, as_metadata, client_id, port, logger)
@@ -40,6 +41,7 @@ class OAuthADALContainer(OAuthContainer):
 
         return result
 
+    # Attempt to authenticate with a ADFS endpoint and then retrieve tokens.
     def get_tokens(self):
         try:
             self.logger.log(("\n" + '{s:{c}^{n}}'.format(s=" Retrieving Tokens ",n=85,c='*') + "\n\n")) 
@@ -51,6 +53,8 @@ class OAuthADALContainer(OAuthContainer):
                 self.logger.log("SUCCESS:  Access token was retrieved. Running validation...\n\n")
                 self.logger.log(("%s: %s\n\n" % ("Access Token", self.access_token.token_value)))
 
+                # Attempt to validate tokens using a JWT decoder
+                # This will print out the contents of the token for visual verification.
                 if (not self.access_token.decodeTokens()):
                     try:
                         self.logger.log(("\t%s: %s\n\n" % ("Error", "Non-JWT token detected. Verifying against introspection endpoint.")))
@@ -81,6 +85,7 @@ class OAuthADALContainer(OAuthContainer):
 
         return True
 
+    # If a token is non-JWT, attempt to use the AS Metadata introspection endpoint to validate the token.
     def introspect_tokens(self):
         if ('introspection_endpoint' in self.as_metadata):
             url = self.as_metadata['introspection_endpoint'] + "?client_id=" + self.client_id + "&token=" + self.access_token.token_value
@@ -103,6 +108,7 @@ class OAuthADALContainer(OAuthContainer):
             self.logger.log(("%s: %s\n\n" % ("INFO", "AS Metadata has no introspection endpoint. Skipping token validation.")))
             return False
 
+    # Attempt to refresh & validate the tokens. This will grab a fresh set of tokens. 
     def refresh_tokens(self):
         try:
             response_data = self.ac.AcquireTokenAsync("https://login.veevavault.com",self.client_id,self.uri,PlatformParameters(PromptBehavior.Auto)).Result

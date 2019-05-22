@@ -2,9 +2,8 @@ import requests
 import urllib
 import webbrowser
 
-
+# Class that creates a OAuth connection to a Veeva Vault instance.
 class VaultConnection:
-
     def __init__(self,vaultUrl=None, apiVersion=None, username=None, password=None, log=None):
         self.vaultUrl = vaultUrl
         self.username = username
@@ -40,70 +39,3 @@ class VaultConnection:
         for item in response_data['vaultIds']:
             if (item['id'] == vaultId):
                 self.vaultUrl = item['url'].rstrip("/api")
-
-
-class MetadataComponents:
-
-    def getComponentTypes(vaultConnection: VaultConnection):
-        componentMap = dict()
-
-        headers = {'Authorization' : vaultConnection.sessionId}
-        request = requests.get(url = vaultConnection.vaultUrl + vaultConnection.apiVersion + "/metadata/components", headers = headers)
-        data = request.json()
-
-        if (data['responseStatus'] == "SUCCESS"):
-            for data in data['data']:
-                componentMap[data['name']] = {'mdl' : {'name': None, 'create' : None, 'recreate' : None, 'alter' : None, 'drop' : None, 'rename' : None}, 'attributes' : []}
-        return componentMap
-    
-    def getComponentTypeMetadata(vaultConnection: VaultConnection, componentType: str):
-        headers = {'Authorization' : vaultConnection.sessionId}
-
-        request = requests.get(url = vaultConnection.vaultUrl + vaultConnection.apiVersion + "/metadata/components/" + componentType, headers = headers)
-        data = request.json()
-
-        if (data['responseStatus'] == "SUCCESS"):
-            return data
-        else:
-            print("Component Type Metadata ERROR: " + componentType)
-            return data
-
-    def getComponentTypeCollection(vaultConnection: VaultConnection, componentType: str):
-        headers = {'Authorization' : vaultConnection.sessionId}
-
-        request = requests.get(url = vaultConnection.vaultUrl + vaultConnection.apiVersion + "/configuration/" + componentType, headers = headers)
-        data = request.json()
-
-        if (data['responseStatus'] == "SUCCESS"):
-            return data
-        else:
-            return data
-
-    def exportMDL(vaultConnection: VaultConnection, component: str):
-        headers = {'Authorization' : vaultConnection.sessionId}
-
-        request = requests.get(url = vaultConnection.vaultUrl + "/api/mdl/components/" + component, headers = headers)
-
-        if request.text.find("responseStatus") != -1:
-            data = request.json()
-            if (data['responseStatus'] == "FAILURE"):
-                return data
-        else:
-            data = request.text
-            return {'responseStatus': 'SUCCESS', 'mdl': data}
-
-    def deployMDL(vaultConnection: VaultConnection, mdl: str):
-        headers = {'Authorization' : vaultConnection.sessionId, 'Accept' : 'application/json'}
-
-        request = requests.post(url = vaultConnection.vaultUrl + "/api/mdl/execute", headers = headers, data = mdl)
-        data = request.json()
-
-        if (data['responseStatus'] == "SUCCESS"):
-            print(data)
-            return data
-        else:
-            print(data)
-            return data
-
-
-

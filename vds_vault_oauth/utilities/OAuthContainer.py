@@ -2,6 +2,7 @@ import requests, random, string, base64, hashlib
 from vds_vault_oauth.utilities.Token import Token
 from vds_vault_oauth.utilities.logging.Logger import Logger
 
+# Class that defines how to handle retrieve tokens for standard OAuth2/Open ID Connect
 class OAuthContainer:
     def __init__(self, as_metadata_url=None, as_metadata=None, client_id=None, port=None, logger=None):
         self.as_metadata_url = as_metadata_url
@@ -42,6 +43,7 @@ class OAuthContainer:
                     self.scope += scope + " "
             self.scope.strip()
 
+    # Validates if the AS Metadata is in the correct state for use with Veeva Vault.
     def verify_as_metadata(self):
         result = True
         if self.as_metadata != None:
@@ -59,6 +61,8 @@ class OAuthContainer:
 
         return result
 
+    # Opens up in a web browser to allow the user to log in to their identity provider. 
+    # On a successful login, an authorization code will be returned the the tool's callback server.
     def get_authorization_code(self, code_type):
         response_type = "code"
         state = ''.join(random.choices(string.ascii_uppercase + string.digits, k=16))
@@ -78,6 +82,7 @@ class OAuthContainer:
         print(url)
         return url
     
+    # Attempt to retrieve tokens based on the provided authorization code. This will automatically differentiate between PKCE & standard security.
     def get_tokens(self):
         grant_type = "authorization_code"
 
@@ -102,6 +107,8 @@ class OAuthContainer:
                 self.logger.log("SUCCESS:  Access token was retrieved. Running validation...\n\n")
                 self.logger.log(("%s: %s\n\n" % ("Access Token", self.access_token.token_value)))
 
+                # Attempt to validate tokens using a JWT decoder
+                # This will print out the contents of the token for visual verification.
                 if (not self.access_token.decodeTokens()):
                     try:
                         self.logger.log(("\t%s: %s\n\n" % ("Error", "Non-JWT token detected. Verifying against introspection endpoint.")))
@@ -143,6 +150,7 @@ class OAuthContainer:
 
         return True
 
+    # If a token is non-JWT, attempt to use the AS Metadata introspection endpoint to validate the token.
     def introspect_tokens(self):
 
         if ('introspection_endpoint' in self.as_metadata):

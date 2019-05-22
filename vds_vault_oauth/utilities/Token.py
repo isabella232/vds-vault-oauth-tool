@@ -4,7 +4,7 @@ from jose.utils import base64url_decode
 from jose.exceptions import JWTError
 from vds_vault_oauth.utilities import OAuthContainer
 
-
+# Token that stores the necessary tokens and provides the ability to decode & log them.
 class Token():
     def __init__(self, token_value, token_type, logger):
         self.token_value = token_value
@@ -13,10 +13,6 @@ class Token():
         self.logger = logger
 
     def decodeTokens(self):
-        # key is equal to the key set that returns from the JWKS endpoint
-        # key = {"kty":"RSA","alg":"RS256","kid":"UpnQvBsxTg7xlg2wblrMxHchWN2AfEOZIGpPnP-MAt0","use":"sig","e":"AQAB","n":"ipjtfQQPWAvLMvFpW_H3GtLLGCRwWpoJN93dPztEwo-CwapveR4_piioMFKFmtiB5G2C8EhW51lU_4uC_fTDNCd44qC89f1Yvsmw46yDUChjmkJTtkyF-GwZGwoXaUQ6uLTgiBOQy2B2YpJKLLt2KaLAo4Pnb0MytPe0KQqEMokC1MlDjxMsNT6Yhm7oDwEmenEatbcmpurRk827oo8NOHhhQA4L8Dpd8ozpvrGEar6v06as-vSmYMoEUP8AtKmhL-szZDhpMmRvXtr2WgBSC7nPB5KLK9WrsFtHYAr340moaXN4C8F61aRjLQC9oukoEipn3kNfmcnbELBGxrkUww"}
-        # claims_ver = jwt.decode(payload,key,algorithms='RS256',options={'verify_aud' : False, 'verify_at_hash' : False})
-        
         if (self.token_value != None and self.token_type != "refresh_token"):
             try:
                 claims = jwt.get_unverified_claims(self.token_value)
@@ -29,7 +25,6 @@ class Token():
                 self.logger.log(("\t%s: %s\n\n" % ("Error", "Non-JWT token detected. Verifying against introspection endpoint.")))
                        
                 return False
-
         return True
 
     def verifyTokenClaims(self):

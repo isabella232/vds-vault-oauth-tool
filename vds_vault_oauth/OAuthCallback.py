@@ -4,6 +4,9 @@ from urllib.parse import urlparse, parse_qs
 from threading import Thread, Timer
 import requests
 
+# Call that contains the code necessary for the callback servber.
+# Starts the necessary localhost server to receive the authorization server's callback at localhost:20500 (default port)
+# Once started, the server will wait for a response from the authorization server and then, if valid, begin to request & validate tokens
 class OAuthCallback:
 
     def __init__(self, oauth_container):
@@ -25,6 +28,7 @@ class OAuthCallback:
                 self.oauth_container.logger.log(("%s: %s\n\n" % ("Error Description", parse_qs(environ['QUERY_STRING'])['error_description'][0])))
                 self.oauth_container.error = True
 
+            # The authorization code was received in the callback, attempt to retrieve tokens.
             if ('code' in parse_qs(environ['QUERY_STRING'])):   
                 self.oauth_container.error = False 
                 self.oauth_container.authorization_code = parse_qs(environ['QUERY_STRING'])['code'][0]
@@ -76,6 +80,7 @@ class OAuthCallback:
         timer = Timer(30.0, self.end_process)
         timer.start()
 
+    # If there is no activity for 30 seconds, the server will automatically shutdown
     def end_process(self):
             if self.oauth_container.error == None:
                     self.oauth_container.logger.log("\n\nNo response received from OAuth2 client. Please verify the user information and client setup with your IT team and try again.\n\n")

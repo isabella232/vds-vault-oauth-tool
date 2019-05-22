@@ -3,6 +3,7 @@ from vds_vault_oauth.utilities.OAuthContainer import OAuthContainer
 from vds_vault_oauth.utilities.OAuthADALContainer import OAuthADALContainer, ADALService
 from vds_vault_oauth.utilities.VaultApiService import VaultConnection
 
+# Class that retrieves AS Metadata based on a specific Veeva Vault user.
 class OAuthVaultUserContainer:
     def __init__(self, username, client_id, port, logger):
         self.connection_type = None
@@ -16,6 +17,8 @@ class OAuthVaultUserContainer:
         
         self.oauth_container = None
 
+    # AS Metadata is retrieved from a Discovery Endpoint and then parsed accordingly. 
+    # https://developer.veevavault.com/api/19.1/#authentication-type-discovery
     def get_vault_metadata(self):
         request = requests.get(url = self.api_url)
         data = request.json()
@@ -46,6 +49,7 @@ class OAuthVaultUserContainer:
             self.oauth_container.logger.log(data)
             return None
 
+    # With a valid Vault user, a connection will be attempted agaisnt Veeva Vault where a session ID will be generated & stored.
     def get_vault_sessionid(self):
         if (self.vault_session_endpoint != None and self.oauth_container.access_token.token_value != None):
             data = self.vault_connection.authenticate_vault_oauth(self.oauth_container.access_token.token_value,self.vault_session_endpoint)
