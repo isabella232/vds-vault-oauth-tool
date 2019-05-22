@@ -1,10 +1,16 @@
-import logging, time,os, datetime
+import logging, time,os, datetime, platform
 from logging.handlers import RotatingFileHandler
+
+def path_converter(input_string):
+        if platform.system() == 'Windows':
+                return input_string.replace("/", "\\")
+        else:
+                return input_string.replace("\\", "/")
 
 class Logger():
     def __init__(self, log_file):
         dateTag = datetime.datetime.now().strftime("%Y-%b-%d_%H-%M-%S")
-        self.log_location = log_file + "\oauth-output-%s.log" % dateTag
+        self.log_location = path_converter(log_file + "\oauth-output-%s.log" % dateTag)
         self.log_file = open(self.log_location, "w+", 1)
         self.render_output = []
         self.log("OAuth Troubleshooting Tool v0.1\n\n")
